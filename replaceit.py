@@ -38,16 +38,19 @@ def main():
     sub = args.substring
     word = args.word
 
+    # Sanity check
     if sub not in word:
         sys.exit(f'Substring "{sub}" does not appear in word "{word}"')
 
+    # Create a pattern that replaces the length of the sub with any letters
     pattern = word.replace(sub, '[a-z]{' + str(len(sub)) + '}')
     regex = re.compile('^' + pattern + '$')
 
+    # Find matches but exclude the original word
     def match(check):
         return check != word and regex.match(check)
 
-    if words := list(filter(match, args.wordlist.read().split())):
+    if words := list(filter(match, args.wordlist.read().lower().split())):
         print('\n'.join(words))
     else:
         print('Womp womp')
